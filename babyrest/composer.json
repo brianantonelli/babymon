@@ -1,0 +1,6 @@
+{
+    "require": {
+        "slim/slim": "2.*",
+        "nass600/get-id3": "dev-master"
+    }
+}
