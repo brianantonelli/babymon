@@ -1,6 +1,7 @@
 package com.brianantonelli.babymon;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import org.apache.http.HttpResponse;
@@ -38,10 +41,15 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
     private static final String SERVICE_BASE_URL = "http://10.0.1.31:9080/index.php/"; // FIXME: move to global config
     public List<String> idList;
     private View headerView;
+    private int volume = 52;
+    private String lastPlayedId;
+    private int lastPlayedPosition;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getListView().addHeaderView(headerView);
+
         idList = new ArrayList<String>();
 
 //        setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new String[]{}));
@@ -52,17 +60,52 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
         headerView = inflater.inflate(R.layout.music_header, null);
+        headerView.setMinimumHeight(50);
+
+        Button stopButton = (Button) headerView.findViewById(R.id.stopButton);
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = SERVICE_BASE_URL + "stopsound";
+                Log.d(TAG, "Stop: " + url);
+                new NetworkTask().execute(url);
+            }
+        });
+
+        SeekBar volumeBar = (SeekBar) headerView.findViewById(R.id.volumeSlider);
+        volumeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean fromUser) {
+                volume = i;
+                if(lastPlayedId != null) playSound(lastPlayedId, Integer.toString(volume));
+                // TODO: would be nice to do this at the end of a drag. that way we don't beat on the server
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        volumeBar.setProgress(volume);
 
         return v;
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.d(TAG, "Clicked " + position);
-//        String songId = ((TextView) v.findViewById(R.id.server_id)).getText().toString();
-        String songId = v.getTag().toString();
+        l.getChildAt(lastPlayedPosition).setBackgroundColor(Color.WHITE);
+        lastPlayedPosition = position;
+        v.setBackgroundColor(Color.argb(90, 77, 182, 232));
 
-        playSound(songId, "52"); // TODO: volume control
+        String songId =  ((TextView) v.findViewById(R.id.server_id)).getText().toString();
+        lastPlayedId = songId;
+
+        playSound(songId, Integer.toString(volume));
     }
 
     @Override
@@ -81,10 +124,7 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
                     LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     v = vi.inflate(R.layout.row, null);
                 }
-//                System.out.print("id for row " + position + " and title? is = " + idList.get(position));
-//                TextView hidden = (TextView) v.findViewById(R.id.server_id);
-//                hidden.setText(idList.get(position));
-                v.setTag(idList.get(position));
+                ((TextView) v.findViewById(R.id.server_id)).setText(idList.get(position));
                 ((TextView) v.findViewById(R.id.text)).setText(getItem(position));
                 return v;
             }

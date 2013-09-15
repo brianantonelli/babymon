@@ -3,6 +3,7 @@ package com.brianantonelli.babymon;
 import java.util.Locale;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity {
+    public static final String PREFS_NAME = "BabyMonPrefsFile";
+    private String serverAddress;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -48,6 +51,9 @@ public class MainActivity extends FragmentActivity {
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        // Restore preferences
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, 0);
+        serverAddress = prefs.getString("serverAddress", "http://10.0.1.31:9080/index.php");
     }
 
     @Override
@@ -57,7 +63,13 @@ public class MainActivity extends FragmentActivity {
         return true;
     }
     
-    
+    public String getServerAddress(){
+        return serverAddress;
+    }
+
+    public void setServerAddress(String serverAddress){
+        this.serverAddress = serverAddress;
+    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -75,11 +87,14 @@ public class MainActivity extends FragmentActivity {
             // Return a DummySectionFragment (defined as a static inner class
             // below) with the page number as its lone argument.
 
-            if(position == 1){
+            if(position == 0){
+                return new WebViewFragment();
+            }
+            else if(position == 1){
                 return new MusicFragment();
             }
-            else if(position == 0){
-                return new WebViewFragment();
+            else if(position == 2){
+                return new SettingsFragment();
             }
             else{
                 Fragment fragment = new DummySectionFragment();
@@ -92,7 +107,7 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -103,6 +118,8 @@ public class MainActivity extends FragmentActivity {
                     return getString(R.string.title_section1).toUpperCase(l);
                 case 1:
                     return getString(R.string.title_section2).toUpperCase(l);
+                case 2:
+                    return getString(R.string.title_section3).toUpperCase(l);
             }
             return null;
         }

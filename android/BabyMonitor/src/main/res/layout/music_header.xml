@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <TextView android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:text="Music Player"/>
+
+    <Button android:id="@+id/stopButton"
+            android:layout_width="200px"
+            android:layout_height="fill_parent"
+            android:text="Stop"
+            android:textAlignment="center"/>
+
+    <SeekBar
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/volumeSlider"/>
+
 </LinearLayout>
