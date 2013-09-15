@@ -37,40 +37,32 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
     private final String TAG = "MusicFragment";
     private static final String SERVICE_BASE_URL = "http://10.0.1.31:9080/index.php/"; // FIXME: move to global config
     public List<String> idList;
-
-    private ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1){
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v = convertView;
-            if (v == null) {
-
-                LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.row, null);
-            }
-            System.out.print("id for row " + position + " and title? is = " + idList.get(position));
-            TextView hidden = (TextView) v.findViewById(R.id.server_id);
-            hidden.setText(idList.get(position));
-            return v;
-        }
-    };
-
+    private View headerView;
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        getListView().addHeaderView(headerView);
         idList = new ArrayList<String>();
-        setListAdapter(arrayAdapter);
+
 //        setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new String[]{}));
         getLoaderManager().initLoader(0, null, this).forceLoad();
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        headerView = inflater.inflate(R.layout.music_header, null);
+
+        return v;
+    }
+
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.d(TAG, "Clicked " + position);
-        Log.d(TAG, getListAdapter().getItem(position).getClass().getCanonicalName());
-        // TODO: sort out ID and titles
+//        String songId = ((TextView) v.findViewById(R.id.server_id)).getText().toString();
+        String songId = v.getTag().toString();
 
-        playSound("a11725ecf0c61cd64c4bb6786018e81d", "52");
+        playSound(songId, "52"); // TODO: volume control
     }
 
     @Override
@@ -80,7 +72,23 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
 
     @Override
     public void onLoadFinished(Loader<String[]> loader, String[] data) {
-        setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, data));
+        setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, data){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = convertView;
+                if (v == null) {
+
+                    LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    v = vi.inflate(R.layout.row, null);
+                }
+//                System.out.print("id for row " + position + " and title? is = " + idList.get(position));
+//                TextView hidden = (TextView) v.findViewById(R.id.server_id);
+//                hidden.setText(idList.get(position));
+                v.setTag(idList.get(position));
+                ((TextView) v.findViewById(R.id.text)).setText(getItem(position));
+                return v;
+            }
+        });
     }
 
     @Override
