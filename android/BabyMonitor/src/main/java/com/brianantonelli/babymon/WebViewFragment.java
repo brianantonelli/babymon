@@ -1,6 +1,8 @@
 package com.brianantonelli.babymon;
 
 import android.graphics.Color;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,12 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.VideoView;
 
 /**
  * Created by monkeymojo on 9/14/13.
  */
 public class WebViewFragment extends Fragment {
-    private final String url = "http://10.0.1.31:9080/stream.html"; // TODO: make configurable
+    private final String url = "http://10.0.1.31:9080/stream_android.html"; // TODO: make configurable
+    private final String videoURL = "http://10.0.1.31:9080/live/index.m3u8";
+//    "http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8";
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -26,7 +31,6 @@ public class WebViewFragment extends Fragment {
         View v = inflater.inflate(R.layout.web_layout, container, false);
 
         WebView wv = (WebView) v.findViewById(R.id.webPage);
-//        Log.d("WV", "wv = " + wv);
         WebSettings webSettings = wv.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
@@ -40,5 +44,6 @@ public class WebViewFragment extends Fragment {
         wv.loadUrl(url);
 
         return v;
+
     }
 }

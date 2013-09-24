@@ -93,6 +93,8 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
         });
         volumeBar.setProgress(volume);
 
+        // TODO: use playtime and create a seeker and then when volume is adjusted we can "kinda" resume? does mpg321 support it?
+
         return v;
     }
 
@@ -125,7 +127,7 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
                     v = vi.inflate(R.layout.row, null);
                 }
                 ((TextView) v.findViewById(R.id.server_id)).setText(idList.get(position));
-                ((TextView) v.findViewById(R.id.text)).setText(getItem(position));
+                ((TextView) v.findViewById(R.id.text)).setText(getItem(position).replace("&amp;", "&"));
                 return v;
             }
         });
