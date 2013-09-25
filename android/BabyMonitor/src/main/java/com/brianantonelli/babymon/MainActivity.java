@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity {
     public static final String PREFS_NAME = "BabyMonPrefsFile";
+    private static final String PREFS_KEY_SERVER = "serverAddress";
     private String serverAddress;
 
     /**
@@ -50,7 +51,7 @@ public class MainActivity extends FragmentActivity {
 
         // Restore preferences
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, 0);
-        serverAddress = prefs.getString("serverAddress", "http://10.0.1.31:9080/index.php");
+        serverAddress = prefs.getString(PREFS_KEY_SERVER, "10.0.1.31");
     }
 
     @Override
@@ -65,6 +66,8 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void setServerAddress(String serverAddress){
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, 0);
+        prefs.edit().putString(PREFS_KEY_SERVER, serverAddress).apply();
         this.serverAddress = serverAddress;
     }
 

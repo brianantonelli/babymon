@@ -1,5 +1,7 @@
 package com.brianantonelli.babymon;
 
+import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -17,10 +19,6 @@ import android.widget.VideoView;
  * Created by monkeymojo on 9/14/13.
  */
 public class WebViewFragment extends Fragment {
-    private final String url = "http://10.0.1.31:9080/stream_android.html"; // TODO: make configurable
-    private final String videoURL = "http://10.0.1.31:9080/live/index.m3u8";
-//    "http://devimages.apple.com/iphone/samples/bipbop/bipbopall.m3u8";
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -41,7 +39,11 @@ public class WebViewFragment extends Fragment {
         wv.setBackgroundColor(Color.BLACK);
         wv.setVerticalScrollBarEnabled(false);
         wv.setHorizontalScrollBarEnabled(false);
-        wv.loadUrl(url);
+
+        // get server endpoint
+        String endpoint = ((MainActivity) getActivity()).getServerAddress();
+
+        wv.loadUrl("file:///android_asset/stream_android.html?endpoint=" + endpoint);
 
         return v;
 

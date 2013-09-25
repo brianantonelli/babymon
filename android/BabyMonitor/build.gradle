@@ -24,4 +24,9 @@ android {
         minSdkVersion 16
         targetSdkVersion 16
     }
+    sourceSets {
+        main {
+            assets.srcDirs = ['assets']
+        }
+    }    
 }

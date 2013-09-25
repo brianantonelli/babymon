@@ -18,25 +18,19 @@ public class SettingsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    private MainActivity getActivty(){
-        return (MainActivity) getActivity();
-    }
-
-    private SharedPreferences getPrefs(){
-        return getActivty().getSharedPreferences(MainActivity.PREFS_NAME, 0);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.settings, container, false);
+        final View v = inflater.inflate(R.layout.settings, container, false);
+        final MainActivity activity = (MainActivity)getActivity();
 
-        ((EditText)v.findViewById(R.id.serverURL)).setText(getActivty().getServerAddress());
+        ((EditText)v.findViewById(R.id.serverURL)).setText(activity.getServerAddress());
 
         Button saveButton = (Button) v.findViewById(R.id.saveSettings);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO get and set URL. also we should hide the path from the user
+                activity.setServerAddress(((EditText)v.findViewById(R.id.serverURL)).getText().toString());
             }
         });
 

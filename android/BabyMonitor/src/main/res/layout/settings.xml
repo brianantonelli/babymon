@@ -5,16 +5,28 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/serverURL"
-            android:layout_gravity="center"/>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="50px"
+        >
+        <TextView android:layout_width="wrap_content"
+                  android:paddingTop="20px"
+                  android:layout_height="50px"
+                android:text="Raspberry PI IP: "/>
+
+        <EditText
+                android:layout_width="150px"
+                android:layout_height="50px"
+                android:id="@+id/serverURL"
+                android:layout_gravity="center"/>
+    </LinearLayout>
 
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save"
+            android:text="Save Changes"
             android:id="@+id/saveSettings"
             android:layout_gravity="center"/>
 </LinearLayout>

@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class MusicFragment extends ListFragment implements LoaderCallbacks<String[]> {
     private final String TAG = "MusicFragment";
-    private static final String SERVICE_BASE_URL = "http://10.0.1.31:9080/index.php/"; // FIXME: move to global config
+    private static String serviceBaseUrl;
     public List<String> idList;
     private View headerView;
     private int volume = 52;
@@ -52,7 +52,9 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
 
         idList = new ArrayList<String>();
 
-//        setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new String[]{}));
+        MainActivity activity = (MainActivity)getActivity();
+        serviceBaseUrl = "http://" + activity.getServerAddress() + ":9080/index.php/";
+
         getLoaderManager().initLoader(0, null, this).forceLoad();
     }
 
@@ -66,7 +68,7 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = SERVICE_BASE_URL + "stopsound";
+                String url = serviceBaseUrl + "stopsound";
                 Log.d(TAG, "Stop: " + url);
                 new NetworkTask().execute(url);
             }
@@ -139,7 +141,7 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
     }
 
     private void playSound(String id, String volume){
-        String url = SERVICE_BASE_URL + "playsound/" + id + "/" + volume;
+        String url = serviceBaseUrl + "playsound/" + id + "/" + volume;
         Log.d(TAG, "Play: " + url);
         new NetworkTask().execute(url);
     }
@@ -154,7 +156,7 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
 
         @Override
         public String[] loadInBackground() {
-            String url = SERVICE_BASE_URL + "sounds";
+            String url = serviceBaseUrl + "sounds";
             String response = sendRequest(url);
 
             return processResponse(response);

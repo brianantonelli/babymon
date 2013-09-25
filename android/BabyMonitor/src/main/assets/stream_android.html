@@ -8,8 +8,10 @@
         margin:0;
         padding:0;
         height:100%;
+        width: 100%;
+        color:#fff;
     }
-    #altContent{
+    #webcam{
         width:100%;
         height:100%;
     }
@@ -17,24 +19,27 @@
 </head>
 <script type="text/javascript">
 
-/* Copyright (C) 2007 Richard Atterer, richardÂ©atterer.net
-   This program is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License, version 2. See the file
-   COPYING for details. */
+var imageNr = 0,
+    finished = [],
+    paused = false,
+    endpoint = "";
 
-var imageNr = 0; // Serial number of current image
-var finished = new Array(); // References to img objects which have finished downloading
-var paused = false;
+function go(){
+    endpoint = 'http://' + document.location.href.split('?endpoint=')[1] + ':8080?action=snapshot&n=';
+}
 
 function createImageLayer() {
   var img = new Image();
-  img.style.position = "absolute";
+  img.style.position = 'absolute';
   img.style.zIndex = -1;
+  img.style.width = '100%';
   img.onload = imageOnload;
   img.onclick = imageOnclick;
-  img.src = document.location.href.replace('9080', '8080').replace('stream_android.html', '?action=snapshot&n=') + (++imageNr);
-  console.log(img.src);
-  var webcam = document.getElementById("webcam");
+  
+  img.src = endpoint + (++imageNr);
+  // document.getElementById('test').innerHTML = img.src;
+
+  var webcam = document.getElementById('webcam');
   webcam.insertBefore(img, webcam.firstChild);
 }
 
@@ -55,8 +60,8 @@ function imageOnclick() { // Clicking on the image will pause the stream
 }
 
 </script>
-<body onload="createImageLayer();">
-
+<body onload="go();createImageLayer();">
+<div id="test"></div>
 <div id="webcam"></div>
 
 </body>
