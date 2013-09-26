@@ -1,11 +1,11 @@
 package com.brianantonelli.babymon;
 
-import android.content.SharedPreferences;
-import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
-import android.media.MediaPlayer;
-import android.net.Uri;
+import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.VideoView;
+import android.widget.Button;
 
 /**
  * Created by monkeymojo on 9/14/13.
@@ -28,7 +28,7 @@ public class WebViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.web_layout, container, false);
 
-        WebView wv = (WebView) v.findViewById(R.id.webPage);
+        final WebView wv = (WebView) v.findViewById(R.id.webPage);
         WebSettings webSettings = wv.getSettings();
         webSettings.setJavaScriptEnabled(true);
 
@@ -45,7 +45,21 @@ public class WebViewFragment extends Fragment {
 
         wv.loadUrl("file:///android_asset/stream_android.html?endpoint=" + endpoint);
 
-        return v;
 
+        Button saveButton = (Button) v.findViewById(R.id.saveWebButton);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PictureDrawable pd = new PictureDrawable(wv.capturePicture());
+                Bitmap bitmap = Bitmap.createBitmap(pd.getIntrinsicWidth(), pd.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(bitmap);
+                canvas.drawPicture(pd.getPicture());
+
+                // TODO: test on device
+                MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bitmap, "title", "description");
+            }
+        });
+
+        return v;
     }
 }

@@ -1,0 +1,12 @@
+# raspistill settings: https://www.modmypi.com/blog/raspberry-pi-camera-board-raspistill-command-list
+
+raspistill -w 960 -h 720 -q 75 -o /tmp/stream/pic.jpg -tl 50 -t 9999999 -th 0:0:0 -ex night -n
+
+/usr/src/mjpg-streamer
+LD_LIBRARY_PATH=./ ./mjpg_streamer -i "input_file.so -f /tmp/stream -n pic.jpg" -o "output_http.so -w ./www"
+
+
+# options https://github.com/jacksonliam/mjpg-streamer
+# -c b2byeeee3:co2105ughM2n2
+/usr/src/mjpeg-streamer-pi
+LD_LIBRARY_PATH=./ ./mjpg_streamer -o "output_http.so -w ./www" -i "input_raspicam.so -d 100 -x 960 -y 720 -ex night"
