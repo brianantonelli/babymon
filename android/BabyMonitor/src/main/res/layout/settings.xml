@@ -6,20 +6,56 @@
               android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="50px"
-        >
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="15px"
+            >
         <TextView android:layout_width="wrap_content"
                   android:paddingTop="20px"
                   android:layout_height="50px"
-                android:text="Raspberry PI IP: "/>
+                  android:text="Server IP: "/>
 
         <EditText
                 android:layout_width="150px"
                 android:layout_height="50px"
                 android:id="@+id/serverURL"
+                android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="15px"
+            >
+        <TextView android:layout_width="wrap_content"
+                  android:paddingTop="20px"
+                  android:layout_height="50px"
+                  android:text="Username: "/>
+
+        <EditText
+                android:layout_width="150px"
+                android:layout_height="50px"
+                android:id="@+id/serverUN"
+                android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="50px"
+            >
+        <TextView android:layout_width="wrap_content"
+                  android:paddingTop="20px"
+                  android:layout_height="50px"
+                  android:text="Password: "/>
+
+        <EditText
+                android:layout_width="150px"
+                android:layout_height="50px"
+                android:id="@+id/serverPW"
                 android:layout_gravity="center"/>
     </LinearLayout>
 

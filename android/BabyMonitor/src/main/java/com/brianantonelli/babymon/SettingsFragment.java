@@ -24,16 +24,28 @@ public class SettingsFragment extends Fragment {
         final View v = inflater.inflate(R.layout.settings, container, false);
         final MainActivity activity = (MainActivity)getActivity();
 
-        ((EditText)v.findViewById(R.id.serverURL)).setText(activity.getServerAddress());
+        setText(v, R.id.serverURL, activity.getServerAddress());
+        setText(v, R.id.serverUN, activity.getServerUsername());
+        setText(v, R.id.serverPW, activity.getServerPassword());
 
         Button saveButton = (Button) v.findViewById(R.id.saveSettings);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.setServerAddress(((EditText)v.findViewById(R.id.serverURL)).getText().toString());
+                activity.setServerAddress(getText(v, R.id.serverURL));
+                activity.setServerUsername(getText(v, R.id.serverUN));
+                activity.setServerPassword(getText(v, R.id.serverPW));
             }
         });
 
         return v;
+    }
+
+    private void setText(View view, int id, String value){
+        ((EditText)view.findViewById(id)).setText(value);
+    }
+
+    private String getText(View view, int id){
+        return ((EditText)view.findViewById(id)).getText().toString();
     }
 }

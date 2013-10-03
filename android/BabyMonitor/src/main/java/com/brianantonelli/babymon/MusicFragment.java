@@ -2,7 +2,6 @@ package com.brianantonelli.babymon;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -19,8 +18,6 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +25,10 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,10 +52,16 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
 
         idList = new ArrayList<String>();
 
-        MainActivity activity = (MainActivity)getActivity();
+        final MainActivity activity = (MainActivity)getActivity();
         serviceBaseUrl = "http://" + activity.getServerAddress() + ":9080/index.php/";
 
         getLoaderManager().initLoader(0, null, this).forceLoad();
+
+        Authenticator.setDefault(new Authenticator(){
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(activity.getServerUsername(), activity.getServerPassword().toCharArray());
+            }
+        });
     }
 
     @Override
@@ -171,13 +177,14 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
                 URL apiUrl = new URL(url);
                 httpCon = (HttpURLConnection) apiUrl.openConnection();
 
+
                 if (httpCon.getResponseCode() != HttpURLConnection.HTTP_OK) { // check for connectivity with server
                     return null;
                 }
                 input = new BufferedReader(new InputStreamReader(httpCon.getInputStream())); // pull all the json from the site
                 String line;
                 while ((line = input.readLine()) != null) {
-                    response.append(line + "\n");
+                    response.append(line).append("\n");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -198,6 +205,9 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
 
         private String[] processResponse(String response) {
             try {
+                if(response == null){
+                    return new String[]{};
+                }
                 JSONArray songsJson = new JSONArray(response);
                 String[] songs = new String[songsJson.length()];
                 fragment.idList = new ArrayList<String>(songsJson.length());
@@ -217,28 +227,25 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
         }
     }
 
-    private class NetworkTask extends AsyncTask<String, Void, HttpResponse> {
+    private class NetworkTask extends AsyncTask<String, Void, Integer> {
         @Override
-        protected HttpResponse doInBackground(String... params) {
-            String link = params[0];
-            HttpGet request = new HttpGet(link);
-            AndroidHttpClient client = AndroidHttpClient.newInstance("Android");
-            try {
-                return client.execute(request);
+        protected Integer doInBackground(String... params) {
+            HttpURLConnection httpCon;
+            try{
+                URL apiUrl = new URL(params[0]);
+                httpCon = (HttpURLConnection) apiUrl.openConnection();
+                return httpCon.getResponseCode();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-                return null;
-            } finally {
-                client.close();
             }
+
+            return HttpURLConnection.HTTP_BAD_REQUEST;
         }
 
         @Override
-        protected void onPostExecute(HttpResponse result) {
-            //Do something with result
-//            if (result != null)
-//                result.getEntity().writeTo(new FileOutputStream(f));
+        protected void onPostExecute(Integer responseCode) {
         }
     }
-
 }

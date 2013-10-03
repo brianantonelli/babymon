@@ -19,7 +19,11 @@ import android.widget.TextView;
 public class MainActivity extends FragmentActivity {
     public static final String PREFS_NAME = "BabyMonPrefsFile";
     private static final String PREFS_KEY_SERVER = "serverAddress";
+    private static final String PREFS_KEY_UN = "serverUN";
+    private static final String PREFS_KEY_PW = "serverPW";
     private String serverAddress;
+    private String serverUsername;
+    private String serverPassword;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -52,6 +56,8 @@ public class MainActivity extends FragmentActivity {
         // Restore preferences
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, 0);
         serverAddress = prefs.getString(PREFS_KEY_SERVER, "10.0.1.31");
+        serverUsername = prefs.getString(PREFS_KEY_UN, "user");
+        serverPassword = prefs.getString(PREFS_KEY_PW, "pass");
     }
 
     @Override
@@ -69,6 +75,26 @@ public class MainActivity extends FragmentActivity {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, 0);
         prefs.edit().putString(PREFS_KEY_SERVER, serverAddress).apply();
         this.serverAddress = serverAddress;
+    }
+
+    public String getServerUsername() {
+        return serverUsername;
+    }
+
+    public void setServerUsername(String serverUsername) {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, 0);
+        prefs.edit().putString(PREFS_KEY_UN, serverUsername).apply();
+        this.serverUsername = serverUsername;
+    }
+
+    public String getServerPassword() {
+        return serverPassword;
+    }
+
+    public void setServerPassword(String serverPassword) {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, 0);
+        prefs.edit().putString(PREFS_KEY_PW, serverPassword).apply();
+        this.serverPassword = serverPassword;
     }
 
     /**
