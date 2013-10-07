@@ -134,8 +134,10 @@ public class MusicFragment extends ListFragment implements LoaderCallbacks<Strin
                     LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     v = vi.inflate(R.layout.row, null);
                 }
-                ((TextView) v.findViewById(R.id.server_id)).setText(idList.get(position));
-                ((TextView) v.findViewById(R.id.text)).setText(getItem(position).replace("&amp;", "&"));
+                if(idList.size() > 0 && position < idList.size()){
+                    ((TextView) v.findViewById(R.id.server_id)).setText(idList.get(position));
+                    ((TextView) v.findViewById(R.id.text)).setText(getItem(position).replace("&amp;", "&"));
+                }
                 return v;
             }
         });
