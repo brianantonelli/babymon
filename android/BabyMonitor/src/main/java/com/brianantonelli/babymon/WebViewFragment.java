@@ -26,8 +26,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,6 +43,14 @@ public class WebViewFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        final MainActivity activity = (MainActivity)getActivity();
+        Authenticator.setDefault(new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(activity.getServerUsername(), activity.getServerPassword().toCharArray());
+            }
+        });
+
     }
 
     @Override
@@ -72,21 +82,28 @@ public class WebViewFragment extends Fragment {
 
         wv.loadUrl(LOCAL_HTML_FILE + endpoint);
 
+        final MainActivity activity = (MainActivity)getActivity();
         Button saveButton = (Button) v.findViewById(R.id.saveWebButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new NetworkTask().doInBackground("http://" + endpoint + "/?action=snapshot");
+                new NetworkTask(activity).execute("http://" + endpoint + ":8080/?action=snapshot");
             }
         });
 
         // keep the screen on
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         return v;
     }
 
     private class NetworkTask extends AsyncTask<String, Void, Integer> {
+        MainActivity activity;
+
+        public NetworkTask(MainActivity activity){
+            this.activity = activity;
+        }
+
         @Override
         protected Integer doInBackground(String... params) {
             HttpURLConnection httpCon;
@@ -96,10 +113,13 @@ public class WebViewFragment extends Fragment {
 
                 InputStream input = httpCon.getInputStream();
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                SimpleDateFormat sdf = new SimpleDateFormat();
-                String data1 = String.valueOf(String.format("%s/DCIM/babymon/baby-%s.jpg",
+                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy__HH:mm");
+                String fileName = String.format("%s/DCIM/babymon/cam %s.jpg",
                         Environment.getExternalStorageDirectory().getAbsolutePath(),
-                        sdf.format(new Date())));
+                        sdf.format(new Date()));
+                String data1 = String.valueOf(fileName);
+
+                Toast.makeText(activity, "Saved to: " + fileName, Toast.LENGTH_SHORT).show();
 
                 FileOutputStream stream = new FileOutputStream(data1);
 

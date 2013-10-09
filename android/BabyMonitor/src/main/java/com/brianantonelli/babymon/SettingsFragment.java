@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * Created by monkeymojo on 9/15/13.
@@ -35,6 +36,7 @@ public class SettingsFragment extends Fragment {
                 activity.setServerAddress(getText(v, R.id.serverURL));
                 activity.setServerUsername(getText(v, R.id.serverUN));
                 activity.setServerPassword(getText(v, R.id.serverPW));
+                Toast.makeText(activity, "Settings Saved :)", Toast.LENGTH_SHORT).show();
             }
         });
 

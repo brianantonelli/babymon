@@ -6,8 +6,8 @@
               android:layout_height="match_parent">
 
     <Button android:id="@+id/stopButton"
-            android:layout_width="200px"
-            android:layout_height="fill_parent"
+            android:layout_width="70pt"
+            android:layout_height="20pt"
             android:text="Stop"
             android:textAlignment="center"/>
 

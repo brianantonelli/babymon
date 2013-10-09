@@ -8,8 +8,8 @@
             android:id="@+id/text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textSize="20dip"
-            android:layout_marginLeft="10dip"/>
+            android:textSize="18sp"
+            android:layout_marginLeft="6pt"/>
 
     <TextView android:id="@+id/server_id"
               android:layout_width="wrap_content"

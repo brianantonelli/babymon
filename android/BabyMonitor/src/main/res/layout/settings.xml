@@ -9,16 +9,17 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_marginBottom="15px"
+            android:layout_marginBottom="13pt"
+            android:layout_marginTop="13pt"
             >
         <TextView android:layout_width="wrap_content"
-                  android:paddingTop="20px"
-                  android:layout_height="50px"
+                  android:paddingTop="10pt"
+                  android:layout_height="20pt"
                   android:text="Server IP: "/>
 
         <EditText
-                android:layout_width="150px"
-                android:layout_height="50px"
+                android:layout_width="80pt"
+                android:layout_height="fill_parent"
                 android:id="@+id/serverURL"
                 android:layout_gravity="center"/>
     </LinearLayout>
@@ -27,17 +28,18 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_marginBottom="15px"
+            android:layout_marginBottom="13pt"
             >
         <TextView android:layout_width="wrap_content"
-                  android:paddingTop="20px"
-                  android:layout_height="50px"
+                  android:paddingTop="10pt"
+                  android:layout_height="20pt"
                   android:text="Username: "/>
 
         <EditText
-                android:layout_width="150px"
-                android:layout_height="50px"
+                android:layout_width="80pt"
+                android:layout_height="fill_parent"
                 android:id="@+id/serverUN"
+                android:text="test"
                 android:layout_gravity="center"/>
     </LinearLayout>
 
@@ -45,16 +47,16 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_marginBottom="50px"
+            android:layout_marginBottom="20pt"
             >
         <TextView android:layout_width="wrap_content"
-                  android:paddingTop="20px"
-                  android:layout_height="50px"
+                  android:paddingTop="10pt"
+                  android:layout_height="20pt"
                   android:text="Password: "/>
 
         <EditText
-                android:layout_width="150px"
-                android:layout_height="50px"
+                android:layout_width="80pt"
+                android:layout_height="fill_parent"
                 android:id="@+id/serverPW"
                 android:layout_gravity="center"/>
     </LinearLayout>
