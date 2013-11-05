@@ -24,6 +24,7 @@ public class MainActivity extends FragmentActivity {
     private String serverAddress;
     private String serverUsername;
     private String serverPassword;
+    private WebViewFragment webviewFragment;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -114,7 +115,8 @@ public class MainActivity extends FragmentActivity {
             // below) with the page number as its lone argument.
 
             if(position == 0){
-                return new WebViewFragment();
+                webviewFragment = new WebViewFragment();
+                return webviewFragment;
             }
             else if(position == 1){
                 return new MusicFragment();
@@ -149,6 +151,20 @@ public class MainActivity extends FragmentActivity {
             }
             return null;
         }
+    }
+
+    public void onDestroy(){
+        if(webviewFragment != null){
+            webviewFragment.stopAudio();
+        }
+        super.onDestroy();
+    }
+
+    public void onBackPressed(){
+        if(webviewFragment != null){
+            webviewFragment.stopAudio();
+        }
+        super.onBackPressed();
     }
 
     /**

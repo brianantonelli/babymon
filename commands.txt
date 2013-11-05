@@ -7,6 +7,20 @@ LD_LIBRARY_PATH=./ ./mjpg_streamer -i "input_file.so -f /tmp/stream -n pic.jpg" 
 
 
 # options https://github.com/jacksonliam/mjpg-streamer
-# -c b2byeeee3:co2105ughM2n2
-/usr/src/mjpeg-streamer-pi
+
+b2byeeee3:co2105ughM2n2
+
+
 LD_LIBRARY_PATH=./ ./mjpg_streamer -o "output_http.so -w ./www" -i "input_raspicam.so -d 100 -x 960 -y 720 -ex night"
+
+LD_LIBRARY_PATH=./ ./mjpg_streamer -o "output_http.so -w ./www -c b2byeeee3:co2105ughM2n2" -i "input_raspicam.so -d 100 -x 960 -y 720 -d 100"
+
+sudo apt-get install darkice icecast2 screen libmp3lame-dev avahi-daemon libasound2-dev wpasupplicant
+
+sudo sh -c 'echo raspbaby > /etc/hostname'
+
+amixer -c 1 set Mic 50%"
+
+cd darkice
+./configure --prefix=/usr --sysconfdir=/usr/share/doc/darkice/examples --with-vorbis-prefix=/usr/lib/arm-linux-gnueabihf/ --with-jack-prefix=/usr/lib/arm-linux-gnueabihf/ --with-alsa-prefix=/usr/lib/arm-linux-gnueabihf/ --with-faac-prefix=/usr/lib/arm-linux-gnueabihf/ --with-aacplus-prefix=/usr/lib/arm-linux-gnueabihf/ --with-samplerate-prefix=/usr/lib/arm-linux-gnueabihf/ --with-lame-prefix=/usr/lib/arm-linux-gnueabihf/ CFLAGS='-march=armv6 -mfpu=vfp -mfloat-abi=hard'
+
