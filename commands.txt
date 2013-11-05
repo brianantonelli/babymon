@@ -8,12 +8,10 @@ LD_LIBRARY_PATH=./ ./mjpg_streamer -i "input_file.so -f /tmp/stream -n pic.jpg" 
 
 # options https://github.com/jacksonliam/mjpg-streamer
 
-b2byeeee3:co2105ughM2n2
-
 
 LD_LIBRARY_PATH=./ ./mjpg_streamer -o "output_http.so -w ./www" -i "input_raspicam.so -d 100 -x 960 -y 720 -ex night"
 
-LD_LIBRARY_PATH=./ ./mjpg_streamer -o "output_http.so -w ./www -c b2byeeee3:co2105ughM2n2" -i "input_raspicam.so -d 100 -x 960 -y 720 -d 100"
+LD_LIBRARY_PATH=./ ./mjpg_streamer -o "output_http.so -w ./www -c user:pass" -i "input_raspicam.so -d 100 -x 960 -y 720 -d 100"
 
 sudo apt-get install darkice icecast2 screen libmp3lame-dev avahi-daemon libasound2-dev wpasupplicant
 
