@@ -57,7 +57,6 @@ public class WebViewFragment extends Fragment {
     private static final String LOCAL_HTML_FILE = "file:///android_asset/stream_android.html?endpoint=";
     private AudioTrack audioTrack;
     private final String TAG = "WebVideoFragment";
-    private boolean playAudio;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -117,18 +116,6 @@ public class WebViewFragment extends Fragment {
 
         return v;
     }
-    public void onHiddenChanged(boolean hidden) {
-        Log.d(TAG, "onHiddenChanged: " + hidden);
-        if(hidden){
-            stopAudio();
-        }
-        else{
-            startAudio();
-        }
-
-        super.onHiddenChanged(hidden);
-    }
-
 
     public void onStop(){
         Log.d(TAG, "onStop");
@@ -143,17 +130,15 @@ public class WebViewFragment extends Fragment {
     }
 
     public void startAudio(){
-        if(!playAudio) return;
-
         Log.d(TAG, "Starting audio");
-        playAudio = true;
+
         new AudioTask().execute("http://" + ((MainActivity) getActivity()).getServerAddress() + ":8000/stream.mp3");
     }
 
     public void stopAudio(){
-        if(playAudio && audioTrack != null){
-            Log.d(TAG, "Stopping audio");
-            playAudio = false;
+        Log.d(TAG, "Stopping audio, audioTrack = " + audioTrack);
+        if(audioTrack != null){
+
             audioTrack.stop();
             audioTrack.release();
             audioTrack = null;
@@ -176,13 +161,13 @@ public class WebViewFragment extends Fragment {
 
                 InputStream input = httpCon.getInputStream();
                 Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy__HH:mm");
-                String fileName = String.format("%s/DCIM/babymon/cam %s.jpg",
+                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy_HH:mm");
+                String fileName = String.format("%s/DCIM/babycam%s.jpg",
                         Environment.getExternalStorageDirectory().getAbsolutePath(),
                         sdf.format(new Date()));
                 String data1 = String.valueOf(fileName);
 
-                Toast.makeText(activity, "Saved to: " + fileName, Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Saved to: " + fileName);
 
                 FileOutputStream stream = new FileOutputStream(data1);
 
@@ -213,12 +198,11 @@ public class WebViewFragment extends Fragment {
             boolean retry = true;
             while (retry) {
                 int shortSizeInBytes = Short.SIZE/Byte.SIZE;
-                Log.d(TAG, "Starting to play audio...");
                 // define the buffer size for audio track
                 Decoder decoder = new Decoder();
                 int bufferSize = (int) decoder.getOutputBlockSize() * shortSizeInBytes;
                 // todo: validate settings with darkice
-                audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 8000, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM);
+                audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 44100, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM);
                 audioTrack.play();
                 try {
                     HttpClient client = new DefaultHttpClient();
@@ -229,7 +213,7 @@ public class WebViewFragment extends Fragment {
                     InputStream inputStream = new BufferedInputStream(entity.getContent(), 8 * decoder.getOutputBlockSize());
                     Bitstream bitstream = new Bitstream(inputStream);
                     boolean done = false;
-                    while (!done && !isCancelled()) {
+                    while (!done) {
                         try {
                             Header frameHeader = bitstream.readFrame();
                             SampleBuffer output = (SampleBuffer) decoder.decodeFrame(frameHeader, bitstream);
@@ -253,7 +237,7 @@ public class WebViewFragment extends Fragment {
                     Log.e(TAG, e.getMessage());
                     retry = false;
                 } catch (NullPointerException e) {
-                    Log.d(TAG, "Null pointer: " + e.getMessage());
+                    return null;
                 }
             }
             return null;

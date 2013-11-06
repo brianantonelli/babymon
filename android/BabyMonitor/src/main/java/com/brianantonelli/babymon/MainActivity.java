@@ -160,6 +160,13 @@ public class MainActivity extends FragmentActivity {
         super.onDestroy();
     }
 
+    public void onResume(){
+        if(webviewFragment != null){
+            webviewFragment.startAudio();
+        }
+        super.onResume();
+    }
+
     public void onBackPressed(){
         if(webviewFragment != null){
             webviewFragment.stopAudio();
