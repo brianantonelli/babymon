@@ -8,8 +8,16 @@
     <WebView android:id="@+id/webPage"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"/>
-    <Button android:id="@+id/saveWebButton"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="Save Pic"/>
+    <LinearLayout android:layout_width="match_parent"
+                  android:gravity="bottom|center"
+                  android:layout_height="match_parent">
+        <Button android:id="@+id/saveWebButton"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Save Pic"/>
+        <Button android:id="@+id/audioButton"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Mute Sound"/>
+    </LinearLayout>
 </RelativeLayout>

@@ -108,6 +108,21 @@ public class WebViewFragment extends Fragment {
             }
         });
 
+        final Button audioButton = (Button) v.findViewById(R.id.audioButton);
+        audioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(audioTrack == null){
+                    startAudio();
+                    audioButton.setText("Stop Audio");
+                }
+                else{
+                    stopAudio();
+                    audioButton.setText("Start Audio");
+                }
+            }
+        });
+
         // start streaming audio
         startAudio();
 
@@ -197,14 +212,15 @@ public class WebViewFragment extends Fragment {
         protected Void doInBackground(String... url) {
             boolean retry = true;
             while (retry) {
-                int shortSizeInBytes = Short.SIZE/Byte.SIZE;
-                // define the buffer size for audio track
-                Decoder decoder = new Decoder();
-                int bufferSize = (int) decoder.getOutputBlockSize() * shortSizeInBytes;
-                // todo: validate settings with darkice
-                audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 44100, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM);
-                audioTrack.play();
                 try {
+                    int shortSizeInBytes = Short.SIZE/Byte.SIZE;
+                    // define the buffer size for audio track
+                    Decoder decoder = new Decoder();
+                    int bufferSize = (int) decoder.getOutputBlockSize() * shortSizeInBytes;
+                    // todo: validate settings with darkice
+                    audioTrack = new AudioTrack(AudioManager.STREAM_MUSIC, 44100, AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT, bufferSize, AudioTrack.MODE_STREAM);
+                    audioTrack.play();
+
                     HttpClient client = new DefaultHttpClient();
                     HttpGet request = new HttpGet();
                     request.setURI(new URI(url[0]));
@@ -237,6 +253,8 @@ public class WebViewFragment extends Fragment {
                     Log.e(TAG, e.getMessage());
                     retry = false;
                 } catch (NullPointerException e) {
+                    return null;
+                } catch(Exception e){
                     return null;
                 }
             }
