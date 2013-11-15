@@ -114,11 +114,11 @@ public class WebViewFragment extends Fragment {
             public void onClick(View view) {
                 if(audioTrack == null){
                     startAudio();
-                    audioButton.setText("Stop Audio");
+                    audioButton.setText("Mute Sound");
                 }
                 else{
                     stopAudio();
-                    audioButton.setText("Start Audio");
+                    audioButton.setText("Play Sound");
                 }
             }
         });
